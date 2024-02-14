@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Celebrations</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #celebrations {
+            margin-top: 20px;
+            font-size: 30px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Today's Reasons to Drink</h1>
+        <input type="date" id="datePicker">
+        <button onclick="setToday()">Today</button>
+        <button onclick="showCelebration()">Show Celebration</button>
+        <div id="celebrations">Select a date or click 'Today' to see reasons to celebrate.</div>
+    </div>
+
+    <script>
+        // Paste your full list of celebrations here, replacing the example entries
+        const celebrations = {
+            '01-01': ['New Year\'s Day: Celebrate new beginnings and set resolutions.'],
+            '01-02': ['Science Fiction Day: Honor classic science fiction literature, films, and art.'],
+            '01-03': ['Festival of Sleep Day: Relax and catch up on sleep after the New Year festivities.'],
+            '01-04': ['Trivia Day: Share fun facts and trivia with friends and family.'],
+            '01-05': ['National Bird Day: Appreciate and raise awareness about the beauty and needs of birds.'],
+            '01-06': ['Bean Day: Celebrate the bean in all its shapes, sizes, and varieties.'],
+            '01-07': ['Old Rock Day: Learn about fossils, geology, and the Earth\'s ancient history.'],
+            '01-08': ['Bubble Bath Day: Enjoy a relaxing bubble bath to unwind and relax.'],
+            '01-09': ['Static Electricity Day: Explore and have fun with static electricity experiments.'],
+            '01-10': ['Houseplant Appreciation Day: Show some love to your indoor green friends.'],
+            '01-11': ['Learn Your Name in Morse Code Day: Decode and encode your name in Morse code.'],
+            '01-12': ['National Pharmacist Day: Appreciate the crucial role pharmacists play in healthcare.'],
+            '01-13': ['Make Your Dream Come True Day: Work towards making a personal dream a reality.'],
+            '01-14': ['Dress Up Your Pet Day: Have fun dressing up your pets in cute outfits.'],
+            '01-15': ['Strawberry Ice Cream Day: Enjoy a scoop or two of strawberry ice cream.'],
+            '01-16': ['Appreciate a Dragon Day: Celebrate dragons in literature and folklore.'],
+            '01-17': ['Ditch New Year\'s Resolutions Day: Reassess and let go of any unrealistic resolutions.'],
+            '01-18': ['Winnie the Pooh Day: Celebrate A.A. Milne\'s birthday and the beloved bear.'],
+            '01-19': ['Popcorn Day: Enjoy some delicious popcorn, maybe with a movie.'],
+            '01-20': ['Cheese Lover\'s Day: Indulge in and celebrate all types of cheese.'],
+            '01-21': ['Hugging Day: Share hugs to spread love and warmth.'],
+            '01-22': ['Hot Sauce Day: Spice up your meals with your favorite hot sauce.'],
+            '01-23': ['Handwriting Day: Practice and appreciate the art of handwriting.'],
+            '01-24': ['Compliment Day: Make someone\'s day by giving them a sincere compliment.'],
+            '01-25': ['Opposite Day: Have fun doing things the opposite way.'],
+            '01-26': ['Spouse\'s Day: Show appreciation for your spouse and the love you share.'],
+            '01-27': ['Chocolate Cake Day: Bake or enjoy a slice of delicious chocolate cake.'],
+            '01-28': ['Data Privacy Day: Learn about and implement better data privacy practices.'],
+            '01-29': ['Puzzle Day: Spend some time solving puzzles, be it jigsaw, crossword, or Sudoku.'],
+            '01-30': ['Croissant Day: Enjoy this delicious, flaky pastry.'],
+            '01-31': ['Backward Day: Wear your clothes backward and walk backward for a bit of fun.'],
+            '02-01': ['Bubble Gum Day: Chew your favorite flavor of bubble gum.'],
+            '02-02': ['Groundhog Day: Will the groundhog see its shadow?'],
+            '02-03': ['Feed the Birds Day: A great day to care for our feathered friends.'],
+            '02-04': ['Create a Vacuum Day: Explore the science of vacuums.'],
+            '02-05': ['World Nutella Day: Enjoy this delicious hazelnut spread in various treats.'],
+            '02-06': ['National Chopsticks Day: Practice eating with chopsticks, or if you\'re skilled, teach someone else!'],
+            '02-07': ['Send a Card to a Friend Day: Brighten someone\'s day with a thoughtful card.'],
+            '02-08': ['Kite Flying Day: A perfect day for kite flying if the weather allows.'],
+            '02-09': ['National Pizza Day: Enjoy a slice or two of your favorite pizza.'],
+            '02-10': ['Umbrella Day: Celebrate this useful invention that keeps us dry.'],
+            '02-11': ['Make a Friend Day: A wonderful opportunity to make new friends.'],
+            '02-12': ['International Darwin Day: Celebrate the birthday of Charles Darwin and his contributions to science.'],
+            '02-13': ['World Radio Day: Celebrate the impact of radio in our lives.'],
+            '02-14': ['Valentine\'s Day: A day to celebrate love and friendship.'],
+            '02-15': ['Singles Awareness Day: A day for singles to celebrate their independence.'],
+            '02-16': ['Do a Grouch a Favor Day: Brighten a grouch\'s day with a kind act.'],
+            '02-17': ['Random Acts of Kindness Day: Perform random acts of kindness to spread positivity.'],
+            '02-18': ['National Drink Wine Day: Enjoy a glass of your favorite wine.'],
+            '02-19': ['Chocolate Mint Day: Enjoy anything with the chocolate mint flavor.'],
+            '02-20': ['Love Your Pet Day: Show extra love and care for your pets.'],
+            '02-21': ['International Mother Language Day: Celebrate linguistic and cultural diversity.'],
+            '02-22': ['Be Humble Day: A day to practice humility and kindness.'],
+            '02-23': ['International Dog Biscuit Appreciation Day: Treat dogs around you with their favorite biscuits.'],
+            '02-24': ['National Tortilla Chip Day: Enjoy this crunchy snack on its own or with your favorite dip.'],
+            '02-25': ['Let\'s All Eat Right Day: Focus on healthy eating habits.'],
+            '02-26': ['Tell a Fairy Tale Day: Share your favorite fairy tales with others.'],
+            '02-27': ['International Polar Bear Day: Raise awareness about the conservation of polar bears.'],
+            '02-28': ['Public Sleeping Day: Take a nap in a public place, if you dare.'],
+            // For leap years
+            '02-29': ['Leap Day: Celebrate the extra day in February with unique leap year traditions.'],
+            '03-01': ['Peanut Butter Lover\'s Day: Celebrate by enjoying peanut butter in various forms.'],
+            '03-02': ['Dr. Seuss Day: Read a book by Dr. Seuss in honor of his birthday.'],
+            '03-03': ['World Wildlife Day: A day to celebrate and raise awareness of the world’s wild animals and plants.'],
+            '03-04': ['National Grammar Day: Appreciate the importance of good grammar in communication.'],
+            '03-05': ['National Cheese Doodle Day: Enjoy this cheesy snack.'],
+            '03-06': ['National Frozen Food Day: Appreciate the convenience and variety of frozen foods.'],
+            '03-07': ['National Cereal Day: Enjoy your favorite cereal for breakfast, lunch, or dinner.'],
+            '03-08': ['International Women\'s Day: Celebrate the social, economic, cultural, and political achievements of women.'],
+            '03-09': ['National Meatball Day: Enjoy meatballs in a variety of dishes.'],
+            '03-10': ['Mario Day: Celebrate the iconic video game character Mario (Mar10 looks like Mario).'],
+            '03-11': ['Johnny Appleseed Day: Remember the man who spread apple trees across America.'],
+            '03-12': ['Plant a Flower Day: Plant a flower to welcome the coming spring.'],
+            '03-13': ['National Coconut Torte Day: Enjoy this delicious dessert made with coconut.'],
+            '03-14': ['Pi Day: Celebrate mathematics and enjoy some pie.'],
+            '03-15': ['World Sleep Day: Focus on the importance of good sleep for health and well-being.'],
+            '03-16': ['National Panda Day: Appreciate these unique bears and the conservation efforts to protect them.'],
+            '03-17': ['St. Patrick\'s Day: Celebrate Irish culture and heritage, especially the patron saint of Ireland.'],
+            '03-18': ['Awkward Moments Day: Embrace life\'s awkward moments.'],
+            '03-19': ['National Chocolate Caramel Day: Enjoy the delightful combination of chocolate and caramel.'],
+            '03-20': ['International Day of Happiness: Celebrate happiness and strive to spread joy.'],
+            '03-21': ['World Poetry Day: Appreciate and support poets and poetry around the world.'],
+            '03-22': ['World Water Day: Focus on the importance of freshwater and sustainable management of water resources.'],
+            '03-23': ['National Puppy Day: Celebrate the joy that puppies bring to our lives.'],
+            '03-24': ['National Chocolate Covered Raisin Day: Enjoy this sweet and chewy treat.'],
+            '03-25': ['Waffle Day: Enjoy waffles with your favorite toppings.'],
+            '03-26': ['Make Up Your Own Holiday Day: Get creative and celebrate whatever you want!'],
+            '03-27': ['International Whisk(e)y Day: Enjoy a glass of whiskey and celebrate its heritage and craft.'],
+            '03-28': ['Something on a Stick Day: Enjoy foods served on sticks, from popsicles to skewers.'],
+            '03-29': ['National Mom and Pop Business Owners Day: Support small, family-owned businesses.'],
+            '03-30': ['Take a Walk in the Park Day: Enjoy nature and the outdoors with a leisurely walk in a park.'],
+            '03-31': ['World Backup Day: Remind yourself to back up your computer data to avoid losing important files.'],
+            '04-01': ['April Fool\'s Day: Have fun with light-hearted pranks and laughter.'],
+            '04-02': ['International Children\'s Book Day: Share and enjoy classic and new children\'s books.'],
+            '04-03': ['World Party Day: A global day of celebration and socializing with friends and family.'],
+            '04-04': ['World Rat Day: Appreciate the roles rats play in our lives, from pets to lab animals.'],
+            '04-05': ['National Deep Dish Pizza Day: Enjoy a slice of deep dish pizza.'],
+            '04-06': ['International Day of Sport for Development and Peace: Recognize the power of sport in promoting peace and erasing cultural barriers.'],
+            '04-07': ['World Health Day: Focus on global health awareness as designated by the World Health Organization.'],
+            '04-08': ['Draw a Picture of a Bird Day: Get creative and draw or paint a bird.'],
+            '04-09': ['National Unicorn Day: Celebrate the magic and wonder of unicorns.'],
+            '04-10': ['National Siblings Day: Honor the bond between brothers and sisters.'],
+            '04-11': ['National Pet Day: Show extra love and appreciation for your pets.'],
+            '04-12': ['International Day of Human Space Flight: Commemorate the first human space flight by Yuri Gagarin.'],
+            '04-13': ['Scrabble Day: Enjoy a game of Scrabble with friends or family.'],
+            '04-14': ['Look Up at the Sky Day: Take a moment to admire the daytime or nighttime sky.'],
+            '04-15': ['World Art Day: Celebrate the fine arts and promote awareness of creative activity worldwide.'],
+            '04-16': ['Save The Elephant Day: Raise awareness about the plight of elephants and efforts to protect them.'],
+            '04-17': ['World Hemophilia Day: Increase awareness about hemophilia and other inherited bleeding disorders.'],
+            '04-18': ['International Day for Monuments and Sites: Celebrate the world\'s shared heritage.'],
+            '04-19': ['National Garlic Day: Celebrate the many culinary and health benefits of garlic.'],
+            '04-20': ['National Look-Alike Day: Have fun finding or dressing up as someone you look like.'],
+            '04-21': ['National Tea Day: Enjoy your favorite cup of tea and perhaps explore new flavors.'],
+            '04-22': ['Earth Day: Participate in activities that promote environmental protection.'],
+            '04-23': ['World Book Day: Celebrate reading and the love of books.'],
+            '04-24': ['National Pigs in a Blanket Day: Enjoy this classic snack of sausages wrapped in dough.'],
+            '04-25': ['World Penguin Day: Acknowledge one of the unique birds found in the Southern Hemisphere.'],
+            '04-26': ['World Intellectual Property Day: Learn about the role intellectual property rights play in encouraging innovation and creativity.'],
+            '04-27': ['Morse Code Day: Celebrate the invention of Morse Code and its contributions to communication.'],
+            '04-28': ['Superhero Day: Honor real-life heroes and celebrate fictional superheroes.'],
+            '04-29': ['International Dance Day: Celebrate dance and its universal language across cultures.'],
+            '04-30': ['International Jazz Day: Enjoy the art form of jazz and its impact on the world.'],
+            '05-01': ['International Workers\' Day: Honor the contributions of workers worldwide.'],
+            '05-02': ['World Tuna Day: Recognize the importance of tuna in global fisheries.'],
+            '05-03': ['World Press Freedom Day: Promote and defend press freedom around the world.'],
+            '05-04': ['Star Wars Day: May the Fourth be with you! Celebrate all things Star Wars.'],
+            '05-05': ['Cinco de Mayo: Celebrate Mexican culture and heritage, especially the Battle of Puebla.'],
+            '05-06': ['National Nurses Day: Thank and honor nurses for their hard work and dedication.'],
+            '05-07': ['National Tourism Day: Promote tourism and its benefits to local economies and cultural exchange.'],
+            '05-08': ['World Red Cross and Red Crescent Day: Recognize the humanitarian work of these organizations.'],
+            '05-09': ['Europe Day: Celebrate peace and unity in Europe.'],
+            '05-10': ['Mother\'s Day: Honor and show appreciation for mothers and mother figures.'],
+            '05-11': ['Eat What You Want Day: Indulge in your favorite foods guilt-free.'],
+            '05-12': ['International Nurses Day: Recognize the contributions of nurses to healthcare.'],
+            '05-13': ['World Cocktail Day: Enjoy and appreciate the art of crafting cocktails.'],
+            '05-14': ['Dance Like a Chicken Day: Have fun and dance like nobody\'s watching!'],
+            '05-15': ['International Day of Families: Celebrate the importance of families and their role in society.'],
+            '05-16': ['Love a Tree Day: Show appreciation for trees and their environmental benefits.'],
+            '05-17': ['World Telecommunication and Information Society Day: Raise awareness about the importance of communication and information sharing.'],
+            '05-18': ['International Museum Day: Explore and appreciate the cultural heritage preserved in museums.'],
+            '05-19': ['World Plant a Vegetable Garden Day: Start a vegetable garden and enjoy the benefits of homegrown produce.'],
+            '05-20': ['World Bee Day: Raise awareness about the importance of bees and their role in pollination.'],
+            '05-21': ['National Waitstaff Day: Thank and appreciate the hard work of waitstaff in restaurants.'],
+            '05-22': ['International Day for Biological Diversity: Celebrate and protect the variety of life on Earth.'],
+            '05-23': ['World Turtle Day: Raise awareness about turtle conservation and their habitats.'],
+            '05-24': ['Aviation Maintenance Technician Day: Recognize the contributions of aviation maintenance technicians.'],
+            '05-25': ['Towel Day: Honor the life and work of author Douglas Adams and the "Hitchhiker\'s Guide to the Galaxy."'],
+            '05-26': ['World Lindy Hop Day: Celebrate the Lindy Hop dance and its cultural significance.'],
+            '05-27': ['Sun Screen Day: Promote sun safety and protect your skin from harmful UV rays.'],
+            '05-28': ['National Hamburger Day: Enjoy a delicious hamburger with your favorite toppings.'],
+            '05-29': ['International Day of UN Peacekeepers: Honor and pay tribute to peacekeepers serving under the United Nations.'],
+            '05-30': ['Water a Flower Day: Show love and care for your plants by watering them regularly.'],
+            '05-31': ['World No Tobacco Day: Raise awareness about the health risks of tobacco use and promote tobacco control policies.'],
+            '06-01': ['Global Day of Parents: Recognize the role of parents in the upbringing of children.'],
+            '06-02': ['National Rocky Road Day: Indulge in this delicious ice cream flavor.'],
+            '06-03': ['World Bicycle Day: Promote the benefits of using bicycles for transport and leisure.'],
+            '06-04': ['National Cheese Day: Enjoy and appreciate the variety of cheeses available worldwide.'],
+            '06-05': ['World Environment Day: Raise awareness and take action for the protection of the environment.'],
+            '06-06': ['National Yo-Yo Day: Have fun and show off your yo-yo skills.'],
+            '06-07': ['National Chocolate Ice Cream Day: Treat yourself to a scoop of chocolate ice cream.'],
+            '06-08': ['World Oceans Day: Raise awareness about the importance of oceans and marine life conservation.'],
+            '06-09': ['National Strawberry Rhubarb Pie Day: Enjoy this classic pie combination of sweet strawberries and tart rhubarb.'],
+            '06-10': ['Ballpoint Pen Day: Celebrate the invention and usefulness of the ballpoint pen.'],
+            '06-11': ['National Corn on the Cob Day: Enjoy freshly grilled or boiled corn on the cob.'],
+            '06-12': ['World Day Against Child Labour: Raise awareness about child labor and promote children\'s rights.'],
+            '06-13': ['International Albinism Awareness Day: Promote awareness and support for people with albinism.'],
+            '06-14': ['World Blood Donor Day: Encourage blood donation to save lives and improve health.'],
+            '06-15': ['Global Wind Day: Celebrate wind power and its potential for sustainable energy.'],
+            '06-16': ['Fresh Veggies Day: Enjoy the freshness and health benefits of vegetables.'],
+            '06-17': ['World Day to Combat Desertification and Drought: Raise awareness about desertification and take action to combat it.'],
+            '06-18': ['International Picnic Day: Enjoy a picnic outdoors with friends or family.'],
+            '06-19': ['Juneteenth: Commemorate the emancipation of enslaved African Americans in the United States.'],
+            '06-20': ['World Refugee Day: Raise awareness about the plight of refugees and support their rights and well-being.'],
+            '06-21': ['International Day of Yoga: Celebrate the physical, mental, and spiritual benefits of yoga.'],
+            '06-22': ['World Rainforest Day: Raise awareness about the importance of rainforests and their conservation.'],
+            '06-23': ['National Pink Day: Embrace the color pink and wear it proudly.'],
+            '06-24': ['Midsummer: Celebrate the summer solstice, the longest day of the year, in the Northern Hemisphere.'],
+            '06-25': ['National Strawberry Parfait Day: Enjoy a delicious dessert made with fresh strawberries.'],
+            '06-26': ['International Day Against Drug Abuse and Illicit Trafficking: Raise awareness about the dangers of drug abuse and illicit trafficking.'],
+            '06-27': ['National Sunglasses Day: Protect your eyes from the sun\'s UV rays with stylish sunglasses.'],
+            '06-28': ['Paul Bunyan Day: Celebrate the legendary lumberjack and his tall tales.'],
+            '06-29': ['International Mud Day: Get messy and play with mud outdoors.'],
+            '06-30': ['Social Media Day: Celebrate the impact of social media on communication and connection worldwide.'],
+            '07-01': ['Canada Day: Celebrate the anniversary of Canada\'s confederation with festivities and fireworks.'],
+            '07-02': ['World UFO Day: Explore and contemplate the possibility of extraterrestrial life.'],
+            '07-03': ['International Plastic Bag Free Day: Raise awareness about the environmental impact of plastic bags and promote reusable alternatives.'],
+            '07-04': ['Independence Day (United States): Celebrate the birth of American independence with fireworks, parades, and barbecues.'],
+            '07-05': ['National Bikini Day: Celebrate the iconic swimwear fashion.'],
+            '07-06': ['International Kissing Day: Show affection and appreciation with a kiss.'],
+            '07-07': ['World Chocolate Day: Indulge in your favorite chocolate treats.'],
+            '07-08': ['Video Game Day: Spend time playing your favorite video games.'],
+            '07-09': ['World Population Day: Raise awareness about global population issues and challenges.'],
+            '07-10': ['National Piña Colada Day: Enjoy the tropical flavors of a piña colada cocktail.'],
+            '07-11': ['World Population Day: Raise awareness about global population issues and challenges.'],
+            '07-12': ['National Simplicity Day: Embrace simplicity and minimalism in your life.'],
+            '07-13': ['National French Fry Day: Indulge in delicious crispy fries.'],
+            '07-14': ['Bastille Day: Celebrate the French National Day with parades, fireworks, and festivities.'],
+            '07-15': ['World Youth Skills Day: Promote the importance of developing skills among young people for employment and entrepreneurship.'],
+            '07-16': ['World Snake Day: Learn about and appreciate these fascinating reptiles.'],
+            '07-17': ['World Emoji Day: Celebrate the fun and expressive world of emojis.'],
+            '07-18': ['Nelson Mandela International Day: Honor the legacy of Nelson Mandela and his commitment to social justice and reconciliation.'],
+            '07-19': ['National Ice Cream Day: Enjoy a scoop or two of your favorite ice cream flavors.'],
+            '07-20': ['Moon Day: Commemorate the first human landing on the moon on July 20, 1969.'],
+            '07-21': ['National Junk Food Day: Indulge in your favorite guilty pleasure junk foods.'],
+            '07-22': ['Pi Approximation Day: Celebrate the mathematical constant pi (π) with this approximation of its value, 22/7.'],
+            '07-23': ['National Gorgeous Grandma Day: Appreciate and celebrate grandmothers of all ages.'],
+            '07-24': ['Amelia Earhart Day: Remember the achievements of the pioneering aviator Amelia Earhart.'],
+            '07-25': ['National Wine and Cheese Day: Enjoy the perfect pairing of wine and cheese.'],
+            '07-26': ['Aunt and Uncle Day: Show appreciation for aunts and uncles and the special role they play in families.'],
+            '07-27': ['National Korean War Veterans Armistice Day: Honor and remember those who served in the Korean War.'],
+            '07-28': ['World Hepatitis Day: Raise awareness about viral hepatitis and promote prevention, testing, and treatment.'],
+            '07-29': ['International Tiger Day: Raise awareness about tiger conservation and the need to protect these majestic animals.'],
+            '07-30': ['International Day of Friendship: Celebrate the importance of friendship in promoting peace and understanding.'],
+            '07-31': ['World Ranger Day: Honor park rangers and their efforts to protect and preserve natural and cultural resources.'],
+
+            // August celebrations
+            '08-01': ['National Girlfriends Day: Celebrate and appreciate your female friends.'],
+            '08-02': ['National Ice Cream Sandwich Day: Enjoy this classic summer treat of ice cream between two cookies or wafers.'],
+            '08-03': ['Watermelon Day: Enjoy the refreshing taste of watermelon on a hot summer day.'],
+            '08-04': ['National Chocolate Chip Cookie Day: Indulge in freshly baked chocolate chip cookies.'],
+            '08-05': ['International Beer Day: Raise a glass and celebrate the diversity of beers worldwide.'],
+            '08-06': ['National Fresh Breath Day: Practice good oral hygiene and enjoy fresh breath all day.'],
+            '08-07': ['International Forgiveness Day: Reflect on forgiveness and its positive impact on mental and emotional well-being.'],
+            '08-08': ['International Cat Day: Celebrate the companionship and love of cats around the world.'],
+            '08-09': ['Book Lover\'s Day: Curl up with a good book and immerse yourself in a captivating story.'],
+            '08-10': ['World Lion Day: Raise awareness about the conservation of lions and their habitats.'],
+            '08-11': ['National Sons and Daughters Day: Spend quality time with your children and celebrate the bond between parents and their offspring.'],
+            '08-12': ['International Youth Day: Recognize the contributions and achievements of young people worldwide.'],
+            '08-13': ['International Left Handers Day: Celebrate the uniqueness of left-handed individuals and their contributions to society.'],
+            '08-14': ['National Creamsicle Day: Enjoy the refreshing combination of vanilla ice cream and orange sherbet in a creamsicle.'],
+            '08-15': ['National Relaxation Day: Take a break, unwind, and pamper yourself with relaxation activities.'],
+            '08-16': ['National Tell a Joke Day: Spread laughter and joy by sharing your favorite jokes with friends and family.'],
+            '08-17': ['National Nonprofit Day: Recognize the importance of nonprofit organizations and their contributions to society.'],
+            '08-18': ['National Fajita Day: Enjoy sizzling hot fajitas with all the fixings.'],
+            '08-19': ['World Humanitarian Day: Honor humanitarian workers and their efforts to alleviate suffering and promote human welfare around the world.'],
+            '08-20': ['National Lemonade Day: Quench your thirst with a refreshing glass of lemonade.'],
+            '08-21': ['Senior Citizens Day: Show appreciation for the elderly and their valuable contributions to society.'],
+            '08-22': ['Be an Angel Day: Perform random acts of kindness and be someone\'s angel for the day.'],
+            '08-23': ['International Day for the Remembrance of the Slave Trade and its Abolition: Commemorate the transatlantic slave trade and its abolition.'],
+            '08-24': ['National Waffle Day: Enjoy waffles for breakfast, brunch, or any time of the day.'],
+            '08-25': ['National Banana Split Day: Indulge in this classic dessert featuring bananas, ice cream, and toppings.'],
+            '08-26': ['Women\'s Equality Day: Celebrate the progress towards gender equality and advocate for equal rights and opportunities for all women.'],
+            '08-27': ['National Just Because Day: Do something spontaneous and fun just because you can.'],
+            '08-28': ['National Bow Tie Day: Embrace your dapper side and wear a bow tie with style.'],
+            '08-29': ['International Day Against Nuclear Tests: Raise awareness about the dangers of nuclear weapons testing and advocate for a nuclear-free world.'],
+            '08-30': ['National Beach Day: Spend a day at the beach soaking up the sun, sand, and surf.'],
+            '08-31': ['National Trail Mix Day: Enjoy this nutritious and energizing snack on your outdoor adventures.'],
+
+            // September celebrations
+            '09-01': ['World Peace Day: Promote peace and harmony among nations and individuals.'],
+            '09-02': ['National Blueberry Popsicle Day: Enjoy a refreshing blueberry popsicle on a hot summer day.'],
+            '09-03': ['National Skyscraper Day: Appreciate the architectural marvels that dot city skylines around the world.'],
+            '09-04': ['World Beard Day: Celebrate the art of growing and grooming beards in all shapes and sizes.'],
+            '09-05': ['International Day of Charity: Support charitable causes and make a positive impact in your community and beyond.'],
+            '09-06': ['Read a Book Day: Escape into the pages of a good book and let your imagination soar.'],
+            '09-07': ['National Beer Lover\'s Day: Raise a pint and celebrate the rich diversity of beers worldwide.'],
+            '09-08': ['International Literacy Day: Promote literacy and education as essential tools for personal and societal development.'],
+            '09-09': ['National Teddy Bear Day: Hug your favorite teddy bear and reminisce about childhood memories.'],
+            '09-10': ['World Suicide Prevention Day: Raise awareness about suicide prevention and support those affected by suicide.'],
+            '09-11': ['Patriot Day: Honor the memory of the victims of the September 11 terrorist attacks in the United States.'],
+            '09-12': ['National Day of Encouragement: Spread positivity and support by encouraging others and lifting their spirits.'],
+            '09-13': ['International Programmers\' Day: Celebrate the contributions of programmers and software developers to technology and innovation.'],
+            '09-14': ['National Coloring Day: Unleash your creativity and relax with some coloring activities.'],
+            '09-15': ['International Day of Democracy: Celebrate the principles of democracy and promote democratic values and institutions worldwide.'],
+            '09-16': ['National Guacamole Day: Enjoy the delicious flavors of fresh guacamole with chips or as a topping.'],
+            '09-17': ['Constitution Day (United States): Commemorate the signing of the United States Constitution and the principles it upholds.'],
+            '09-18': ['World Water Monitoring Day: Raise awareness about water quality and conservation efforts worldwide.'],
+            '09-19': ['Talk Like a Pirate Day: Arrr, matey! Embrace your inner pirate and speak in pirate lingo for the day.'],
+            '09-20': ['International Day of Peace: Promote peace and non-violence on a global scale.'],
+            '09-21': ['International Day of Peace: Promote peace and non-violence on a global scale.'],
+            '09-22': ['World Rhino Day: Raise awareness about the plight of rhinoceros species and efforts to protect them from extinction.'],
+            '09-23': ['National Snack Stick Day: Enjoy this convenient and portable snack on the go.'],
+            '09-24': ['National Punctuation Day: Celebrate the importance of punctuation in written communication.'],
+            '09-25': ['National Comic Book Day: Dive into the colorful and imaginative world of comic books.'],
+            '09-26': ['European Day of Languages: Celebrate linguistic diversity and language learning across Europe.'],
+            '09-27': ['World Tourism Day: Promote sustainable tourism and cultural exchange around the world.'],
+            '09-28': ['International Right to Know Day: Advocate for transparency and access to information as fundamental human rights.'],
+            '09-29': ['World Heart Day: Raise awareness about cardiovascular health and promote heart-healthy habits.'],
+            '09-30': ['International Podcast Day: Celebrate the power of podcasts as a medium for storytelling, education, and entertainment.'],
+
+            // October celebrations
+            '10-01': ['International Coffee Day: Savor your favorite cup of coffee and celebrate the global love for this beloved beverage.'],
+            '10-02': ['World Smile Day: Spread happiness and kindness by sharing smiles with others.'],
+            '10-03': ['National Boyfriend Day: Show appreciation for your boyfriend and celebrate the love and companionship you share.'],
+            '10-04': ['World Animal Day: Advocate for the rights and welfare of animals and celebrate the diversity of wildlife on Earth.'],
+            '10-05': ['World Teachers\' Day: Honor and appreciate teachers for their dedication and contributions to education.'],
+            '10-06': ['National Noodle Day: Enjoy your favorite noodle dishes from around the world.'],
+            '10-07': ['World Habitat Day: Raise awareness about the importance of shelter and housing for all people.'],
+            '10-08': ['National Pierogi Day: Indulge in delicious stuffed dumplings with various savory or sweet fillings.'],
+            '10-09': ['World Post Day: Recognize the role of postal services in connecting people and facilitating communication worldwide.'],
+            '10-10': ['World Mental Health Day: Raise awareness about mental health issues and promote mental well-being for all.'],
+            '10-11': ['International Day of the Girl Child: Empower girls and advocate for gender equality and the rights of girls around the world.'],
+            '10-12': ['National Farmers Day: Honor and appreciate the hard work and contributions of farmers to society.'],
+            '10-13': ['International Day for Disaster Risk Reduction: Raise awareness about disaster risk reduction and resilience-building efforts.'],
+            '10-14': ['National Dessert Day: Indulge your sweet tooth with your favorite desserts.'],
+            '10-15': ['Global Handwashing Day: Promote handwashing as a simple yet effective way to prevent diseases and save lives.'],
+            '10-16': ['World Food Day: Raise awareness about food security and promote action to end hunger worldwide.'],
+            '10-17': ['International Day for the Eradication of Poverty: Take action to alleviate poverty and promote sustainable development for all.'],
+            '10-18': ['National Chocolate Cupcake Day: Treat yourself to a delicious chocolate cupcake.'],
+            '10-19': ['International Gin and Tonic Day: Enjoy the classic cocktail made with gin, tonic water, and lime.'],
+            '10-20': ['World Statistics Day: Recognize the importance of statistics in shaping policies and decisions for the betterment of society.'],
+            '10-21': ['Back to the Future Day: Celebrate the iconic sci-fi film franchise and its vision of the future.'],
+            '10-22': ['International Stuttering Awareness Day: Raise awareness about stuttering and support people who stutter.'],
+            '10-23': ['National Boston Cream Pie Day: Indulge in this classic American dessert featuring layers of sponge cake, pastry cream, and chocolate glaze.'],
+            '10-24': ['United Nations Day: Commemorate the founding of the United Nations and its mission to promote peace, security, and cooperation among nations.'],
+            '10-25': ['World Pasta Day: Enjoy a comforting and satisfying bowl of pasta with your favorite sauce.'],
+            '10-26': ['National Pumpkin Day: Embrace the flavors and festivities of the fall season with pumpkins in various culinary delights.'],
+            '10-27': ['World Day for Audiovisual Heritage: Recognize the importance of preserving and safeguarding audiovisual heritage for future generations.'],
+            '10-28': ['National Chocolate Day: Indulge in your favorite chocolate treats to satisfy your sweet cravings.'],
+            '10-29': ['National Cat Day: Celebrate the companionship and love of cats as beloved pets.'],
+            '10-30': ['National Candy Corn Day: Enjoy this iconic Halloween candy with its distinct tri-color design.'],
+            '10-31': ['Halloween: Celebrate the spooky and festive traditions of Halloween with costumes, candy, and decorations.'],
+
+            // November celebrations
+            '11-01': ['World Vegan Day: Celebrate and promote the benefits of a vegan lifestyle for animals, the environment, and health.'],
+            '11-02': ['Day of the Dead (Día de los Muertos): Honor deceased loved ones and celebrate their lives with colorful altars, music, and food.'],
+            '11-03': ['National Sandwich Day: Enjoy your favorite sandwich creations, from classic deli-style to gourmet specialties.'],
+            '11-04': ['National Candy Day: Indulge in a variety of sweet treats and confections.'],
+            '11-05': ['World Tsunami Awareness Day: Raise awareness about tsunami risks and promote preparedness and resilience in vulnerable communities.'],
+            '11-06': ['International Day for Preventing the Exploitation of the Environment in War and Armed Conflict: Highlight the environmental consequences of armed conflict and advocate for their protection.'],
+            '11-07': ['International Day of Radiology: Recognize the importance of medical imaging and radiology in healthcare diagnosis and treatment.'],
+            '11-08': ['National STEM Day: Celebrate and promote the fields of science, technology, engineering, and mathematics.'],
+            '11-09': ['World Freedom Day: Commemorate the fall of the Berlin Wall and celebrate freedom and democracy worldwide.'],
+            '11-10': ['World Science Day for Peace and Development: Highlight the role of science in advancing peace and sustainable development.'],
+            '11-11': ['Veterans Day: Honor military veterans who have served in the United States Armed Forces.'],
+            '11-12': ['World Pneumonia Day: Raise awareness about pneumonia, a preventable and treatable disease that affects millions worldwide.'],
+            '11-13': ['World Kindness Day: Spread kindness and compassion to others through acts of generosity and goodwill.'],
+            '11-14': ['World Diabetes Day: Raise awareness about diabetes prevention, management, and access to healthcare for all.'],
+            '11-15': ['America Recycles Day: Promote recycling and waste reduction efforts to conserve natural resources and protect the environment.'],
+            '11-16': ['International Day for Tolerance: Advocate for tolerance, understanding, and respect among individuals and communities worldwide.'],
+            '11-17': ['World Prematurity Day: Raise awareness about premature birth and the health challenges faced by preterm infants and their families.'],
+            '11-18': ['National Apple Cider Day: Enjoy the crisp and refreshing taste of apple cider, a seasonal favorite.'],
+            '11-19': ['International Men\'s Day: Celebrate the positive contributions and achievements of men and boys in society.'],
+            '11-20': ['Universal Children\'s Day: Promote and celebrate children\'s rights, well-being, and happiness worldwide.'],
+            '11-21': ['World Television Day: Recognize the role of television in informing, educating, and entertaining audiences around the world.'],
+            '11-22': ['Thanksgiving: Gather with family and friends to give thanks and enjoy a festive feast.'],
+            '11-23': ['Black Friday: Kick off the holiday shopping season with deals and discounts from retailers.'],
+            '11-24': ['Small Business Saturday: Support local businesses and shop small for unique gifts and products.'],
+            '11-25': ['International Day for the Elimination of Violence Against Women: Raise awareness about and take action to end violence against women and girls.'],
+            '11-26': ['Cyber Monday: Shop online for exclusive deals and discounts from retailers.'],
+            '11-27': ['Giving Tuesday: Join a global movement and give back to charitable causes and organizations.'],
+            '11-28': ['National French Toast Day: Start your day with a delicious breakfast of French toast topped with syrup and powdered sugar.'],
+            '11-29': ['Electronic Greeting Card Day: Send digital greetings and messages to friends and loved ones to brighten their day.'],
+            '11-30': ['Computer Security Day: Take steps to protect your computer and personal information from cyber threats and attacks.'],
+
+            // December celebrations
+            '12-01': ['World AIDS Day: Raise awareness about HIV/AIDS, support those affected by the virus, and remember those who have lost their lives to AIDS-related illnesses.'],
+            '12-02': ['International Day for the Abolition of Slavery: Commemorate the abolition of slavery and advocate for the eradication of modern slavery and human trafficking.'],
+            '12-03': ['International Day of Persons with Disabilities: Promote the rights and well-being of persons with disabilities and raise awareness about disability issues and challenges.'],
+            '12-04': ['National Cookie Day: Indulge in a variety of cookies, from classic chocolate chip to homemade sugar cookies.'],
+            '12-05': ['International Volunteer Day for Economic and Social Development: Recognize and celebrate the contributions of volunteers to peace and development worldwide.'],
+            '12-06': ['St. Nicholas Day: Celebrate the feast day of St. Nicholas and the tradition of gift-giving and acts of kindness.'],
+            '12-07': ['Pearl Harbor Remembrance Day: Honor and remember the victims of the attack on Pearl Harbor and the sacrifices of the military personnel who served during World War II.'],
+            '12-08': ['International Day of Neutrality: Promote the principles of neutrality in international relations and conflicts.'],
+            '12-09': ['International Anti-Corruption Day: Raise awareness about corruption and advocate for measures to prevent and combat it.'],
+            '12-10': ['Human Rights Day: Commemorate the adoption of the Universal Declaration of Human Rights and advocate for the protection and promotion of human rights worldwide.'],
+            '12-11': ['International Mountain Day: Celebrate the beauty and importance of mountains and raise awareness about their conservation and sustainable development.'],
+            '12-12': ['National Gingerbread House Day: Get creative and build your own gingerbread house for the holidays.'],
+            '12-13': ['National Cocoa Day: Indulge in a warm cup of cocoa topped with marshmallows or whipped cream.'],
+            '12-14': ['Monkey Day: Celebrate and appreciate the fascinating world of monkeys and primates.'],
+            '12-15': ['International Tea Day: Enjoy a soothing cup of tea and celebrate the diverse cultures and traditions associated with tea drinking.'],
+            '12-16': ['National Ugly Christmas Sweater Day: Embrace the holiday spirit and wear your most festive and outrageous Christmas sweater.'],
+            '12-17': ['International Day to End Violence Against Sex Workers: Raise awareness about violence and discrimination faced by sex workers and advocate for their rights and safety.'],
+            '12-18': ['National Bake Cookies Day: Spend time in the kitchen baking a variety of cookies to share with family and friends.'],
+            '12-19': ['International Human Solidarity Day: Promote solidarity and unity among people and nations to achieve common goals and address global challenges.'],
+            '12-20': ['National Sangria Day: Enjoy this refreshing and fruity Spanish wine punch with friends and loved ones.'],
+            '12-21': ['Winter Solstice: Welcome the first day of winter and the shortest day of the year in the Northern Hemisphere.'],
+            '12-22': ['National Cookie Exchange Day: Host or participate in a cookie exchange party to share delicious homemade cookies with others.'],
+            '12-23': ['Festivus: Celebrate the fictional holiday popularized by the sitcom "Seinfeld" with traditions like the "Airing of Grievances" and "Feats of Strength."'],
+            '12-24': ['Christmas Eve: Prepare for and celebrate the arrival of Christmas with festive traditions and gatherings.'],
+            '12-25': ['Christmas: Celebrate the birth of Jesus Christ and enjoy time with family and friends during this festive holiday.'],
+            '12-26': ['Boxing Day: Enjoy post-Christmas sales, sports events, and charitable activities on this public holiday observed in several countries.'],
+            '12-27': ['National Fruitcake Day: Give fruitcake a chance and enjoy this traditional holiday treat with a cup of tea or coffee.'],
+            '12-28': ['Pledge of Allegiance Day: Honor the American flag and the principles of liberty and justice for all.'],
+            '12-29': ['Tick Tock Day: Use this day as a reminder to complete any outstanding tasks or goals before the end of the year.'],
+            '12-30': ['National Bacon Day: Indulge in the savory and crispy goodness of bacon in your favorite dishes.'],
+            '12-31': ['New Year\'s Eve: Bid farewell to the old year and welcome the new year with joy, hope, and celebration.']
+
+            // Continue adding celebrations for each day...
+        };
+
+        function setToday() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('datePicker').value = today;
+            showCelebration();
+        }
+
+        function showCelebration() {
+            const selectedDate = document.getElementById('datePicker').value;
+            const [year, month, day] = selectedDate.split('-');
+            const celebrationKey = `${month}-${day}`;
+            const celebrationDiv = document.getElementById('celebrations');
+            celebrationDiv.innerHTML = ''; // Clear previous content
+
+            if (celebrations[celebrationKey]) {
+                const div = document.createElement('div');
+                div.textContent = celebrations[celebrationKey].join(", "); // Join celebrations if there are multiple
+                celebrationDiv.appendChild(div);
+            } else {
+                celebrationDiv.textContent = 'No specific celebrations found for this day.';
+            }
+        }
+    </script>
+</body>
+
+</html>
